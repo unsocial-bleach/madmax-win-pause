@@ -1,0 +1,4 @@
+# Install these requirements with: python3 -m pip install -r requirements.txt
+
+pystray
+PIL
