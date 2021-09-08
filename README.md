@@ -16,3 +16,10 @@ A systray tool to pause/resume current Chia plotting operations from [madMAx43v3
 ## Other Notes
 * The [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter) executable file must be named `chia-plotter`.
 * This tool is only useful on Windows. Use `kill -SIGSTOP <pid>` and `kill -SIGCONT <pid>` on *NIX systems.
+
+## Donations
+I know this isn't a complicated tool or anything, but feel free to share a couple mojos.
+* Bitcoin: 1E6mm66QU4DeF9NBGKqWBPnbGNPg3Uwf8u
+* Monero: 43hK7YNKQvvZNrAGaisdYT61v7gUAvyQqL1m8uoD66VGc8MFmoHoWWq5EiHKGeQPWBJa29JbL45dE7L3ViaXMuaB9sUAfEM
+* Litecoin: LKi9UzDNTRpXh8TmDaETE1K1a3jqdXedDG
+* Chia: xch15qrjf3z5m3pv3f3kxpv8fazmutfz2jghlheju25tuncvzj8xhcdq74kzlj
