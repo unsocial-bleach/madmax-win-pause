@@ -8,6 +8,8 @@ import psutil
 from PIL import Image
 import pystray
 
+trayName = "MadMax Pause Tool"
+
 targetProcName = 'chia_plot.exe'
 pssuspendFilePath = 'pssuspend64.exe'
 
@@ -25,12 +27,17 @@ def resource_path(relative_path):
 	:source: https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
 	"""
 
-	try:
-		# PyInstaller creates a temp folder and stores path in _MEIPASS
-		base_path = sys._MEIPASS
-	except Exception: # for dev
-		#base_path = os.path.abspath(".")
-		base_path = os.path.dirname(os.path.realpath(__file__)) # set as the path the current script is in (doesn't matter where the script is run from)
+	if getattr(sys, 'frozen', False):
+		# frozen with cx_Freeze
+		base_path = os.path.dirname(sys.executable)
+	else:
+		# Either PyInstaller or normal
+		try:
+			# PyInstaller creates a temp folder and stores path in _MEIPASS
+			base_path = sys._MEIPASS
+		except Exception: # for dev
+			#base_path = os.path.abspath(".")
+			base_path = os.path.dirname(os.path.realpath(__file__)) # set as the path the current script is in (doesn't matter where the script is run from)
 
 	return os.path.join(base_path, relative_path)
 
@@ -94,14 +101,14 @@ def initSysTray():
 	img = Image.open(resource_path("plot-icon.png")) # Get it? The icon is a picture of a plot for a tool about plotting.
 
 	menu = pystray.Menu(
-		pystray.MenuItem("MadMax Pause Tool", enabled=False, action=lambda: None),
+		pystray.MenuItem(trayName, enabled=False, action=lambda: None),
 		pystray.MenuItem(getStatusText, enabled=False, action=lambda: None),
 		pystray.MenuItem("Pause All Instances", lambda: doActionOnAllProcesses('pause')),
 		pystray.MenuItem("Resume All Instances", lambda: doActionOnAllProcesses('resume')),
 		pystray.MenuItem('Quit This Tool', lambda: store['tray_icon'].stop()),
 	)
 
-	store['tray_icon'] = pystray.Icon("MadMax Pause Tool", img, "MadMax Pause Tool", menu)
+	store['tray_icon'] = pystray.Icon(trayName, img, trayName, menu)
 	store['tray_icon'].run()
 
 if __name__ == '__main__':
