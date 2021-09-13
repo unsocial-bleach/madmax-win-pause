@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import os
+import os, sys
 import subprocess
 import psutil
 
@@ -9,12 +9,30 @@ from PIL import Image
 import pystray
 
 targetProcName = 'chia_plot.exe'
-pssuspendFilePath = 'pssuspend64.exe' # assume in same directory as Python file; can specify a full path here if desired
+pssuspendFilePath = 'pssuspend64.exe'
 
 store = {
 	'tray_icon': None,
 	'last_action': None,
+	'last_procCount': 0,
 }
+
+def resource_path(relative_path):
+	"""
+	Get absolute path to resource (file).
+	Works for dev and for PyInstaller. Required for single-file bundling with PyInstaller exe.
+
+	:source: https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
+	"""
+
+	try:
+		# PyInstaller creates a temp folder and stores path in _MEIPASS
+		base_path = sys._MEIPASS
+	except Exception: # for dev
+		#base_path = os.path.abspath(".")
+		base_path = os.path.dirname(os.path.realpath(__file__)) # set as the path the current script is in (doesn't matter where the script is run from)
+
+	return os.path.join(base_path, relative_path)
 
 def find_procs_by_name(name):
 	"""
@@ -41,12 +59,11 @@ def doActionOnProcess(action:str, pid:int):
 
 	print(f"Performing '{action}' action on PID {pid}.")
 
-	store['last_action'] = action
-
+	pssuspendFilePathCmd = '"' + resource_path(pssuspendFilePath) + '"'
 	if action == 'resume':
-		textBack = subprocess.check_output([pssuspendFilePath, '/accepteula', '-r', str(int(pid))])
+		textBack = subprocess.check_output([pssuspendFilePathCmd, '/accepteula', '-r', str(int(pid))])
 	elif action == 'pause':
-		textBack = subprocess.check_output([pssuspendFilePath, '/accepteula', str(int(pid))])
+		textBack = subprocess.check_output([pssuspendFilePathCmd, '/accepteula', str(int(pid))])
 	else:
 		print(f"Invalid action: '{action}'")
 		return
@@ -56,22 +73,25 @@ def doActionOnProcess(action:str, pid:int):
 def doActionOnAllProcesses(action:str):
 	"""
 	Either pauses or resumes all instances.
-	
+
 	:param action: passed through to `doActionOnProcess(action, ...)`
 	"""
 
-	procList = find_procs_by_name('chia_plot.exe')
+	procList = find_procs_by_name(targetProcName)
 	for proc in procList:
 		doActionOnProcess(action, proc.pid)
 
+	store['last_action'] = action
+	store['last_procCount'] = len(procList)
+
 def getStatusText(icon=None) -> str:
 	if store['last_action']:
-		return "Last Action: " + store['last_action'].title()
+		return "Last Action: " + store['last_action'].title() + f" [{store['last_procCount']} instance(s)]"
 	else:
 		return "No Action Yet"
 
 def initSysTray():
-	img = Image.open("plot-icon.png") # Get it? The icon is a picture of a plot for a tool about plotting.
+	img = Image.open(resource_path("plot-icon.png")) # Get it? The icon is a picture of a plot for a tool about plotting.
 
 	menu = pystray.Menu(
 		pystray.MenuItem("MadMax Pause Tool", enabled=False, action=lambda: None),
