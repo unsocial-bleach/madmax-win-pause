@@ -15,7 +15,7 @@ A systray tool to pause/resume current Chia plotting operations from [madMAx43v3
 
 ### How to Build
 Building this package to a .exe file is done with the following command:
-`python -m pyinstaller --noconfirm --onefile --windowed --clean --add-data "plot-icon.png;." --add-data "pssuspend64.exe;."  "madmax-win-pause.py"`
+`python -m PyInstaller --noconfirm --onefile --console --clean --add-data "plot-icon.png;." --add-data "pssuspend64.exe;."  "madmax-win-pause.py"`
 
 ## Other Notes
 * The [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter) executable file must be named `chia-plotter`.

@@ -59,7 +59,7 @@ def doActionOnProcess(action:str, pid:int):
 
 	print(f"Performing '{action}' action on PID {pid}.")
 
-	pssuspendFilePathCmd = '"' + resource_path(pssuspendFilePath) + '"'
+	pssuspendFilePathCmd = resource_path(pssuspendFilePath).replace(' ', '\ ') #'"' + resource_path(pssuspendFilePath) + '"'
 	if action == 'resume':
 		textBack = subprocess.check_output([pssuspendFilePathCmd, '/accepteula', '-r', str(int(pid))])
 	elif action == 'pause':
@@ -106,4 +106,14 @@ def initSysTray():
 
 if __name__ == '__main__':
 	print("Starting...")
+
+	# hide the console windown, if applicable (for PyInstaller)
+	# https://stackoverflow.com/a/67694576
+	import ctypes
+	kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+	process_array = (ctypes.c_uint8 * 1)()
+	num_processes = kernel32.GetConsoleProcessList(process_array, 1)
+	if num_processes < 3: ctypes.WinDLL('user32').ShowWindow(kernel32.GetConsoleWindow(), 0)
+
+	# start the system tray
 	initSysTray()
