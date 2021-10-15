@@ -1,6 +1,10 @@
 # madmax-win-pause
 A systray tool to pause/resume current Chia plotting operations from [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter)
 
+<p align="center">
+	<img src="plot-icon.png" alt="Systray Icon" />
+</p>
+
 ## Dependencies
 * Microsoft's sysinternal's "PsSuspend"
 	* v1.07 is already downloaded in the repo for your convencience. Otherwise, it must be downloaded from [their website for free.](https://docs.microsoft.com/en-us/sysinternals/downloads/pssuspend)
