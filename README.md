@@ -5,6 +5,11 @@ A systray tool to pause/resume current Chia plotting operations from [madMAx43v3
 	<img src="plot-icon.png" alt="Systray Icon" />
 </p>
 
+## How to Use
+1. Download the release executable (`madmax-win-pause.exe`) from the [Releases page](https://github.com/unsocial-bleach/madmax-win-pause/releases/).
+2. Run the executable.
+3. Access the program by right-clicking on the system tray icon.
+
 ## Dependencies
 * Microsoft's sysinternal's "PsSuspend"
 	* v1.07 is already downloaded in the repo for your convencience. Otherwise, it must be downloaded from [their website for free.](https://docs.microsoft.com/en-us/sysinternals/downloads/pssuspend)
@@ -14,10 +19,7 @@ A systray tool to pause/resume current Chia plotting operations from [madMAx43v3
 * Using PsSuspend to pause MadMax: https://www.reddit.com/r/chia/comments/njev0c/windows_automatically_pause_plotters_when_you/
 * Pausing on Linux: https://www.reddit.com/r/chia/comments/ojfn5j/is_it_possible_to_pause_plotting/h51aj6o
 
-## How to Install
-* See fully-packaged release executable.
-
-### How to Build
+## How to Build
 Building this package to a .exe file is done with the following command:
 `python -m PyInstaller --noconfirm --onefile --console --clean --add-data "plot-icon.png;." --add-data "pssuspend64.exe;."  "madmax-win-pause.py"`
 
