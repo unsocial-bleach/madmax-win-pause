@@ -1,5 +1,5 @@
 # madmax-win-pause
-A systray tool to pause/resume current Chia plotting operations from [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter)
+A systray tool to pause/resume/set CPU priority for ongoing [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter) Chia plotting operations. 
 
 <p align="center">
 	<img src="plot-icon.png" alt="Systray Icon" />
@@ -8,7 +8,11 @@ A systray tool to pause/resume current Chia plotting operations from [madMAx43v3
 ## How to Use
 1. Download the release executable (`madmax-win-pause.exe`) from the [Releases page](https://github.com/unsocial-bleach/madmax-win-pause/releases/).
 2. Run the executable.
-3. Access the program by right-clicking on the system tray icon.
+3. Access the program by right-clicking on the system tray icon, then selecting an action.
+
+## Features
+* Pause and resume ongoing [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter) Chia plotting operations.
+* Set the CPU priority for ongoing [madMAx43v3r/chia-plotter](https://github.com/madMAx43v3r/chia-plotter) Chia plotting operations.
 
 ## Dependencies
 * Microsoft's sysinternal's "PsSuspend"
