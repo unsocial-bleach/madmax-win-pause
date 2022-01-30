@@ -49,11 +49,34 @@ def find_procs_by_name(name):
 			ls.append(p)
 	return ls
 
+def setPriority(pid: int, priority: str) -> str:
+	proc = psutil.Process(pid)
+	pri = psutil.NORMAL_PRIORITY_CLASS
+	
+	if priority == 'REALTIME_PRIORITY_CLASS':
+		pri = psutil.REALTIME_PRIORITY_CLASS
+	if priority == 'HIGH_PRIORITY_CLASS':
+		pri = psutil.HIGH_PRIORITY_CLASS
+	if priority == 'ABOVE_NORMAL_PRIORITY_CLASS':
+		pri = psutil.ABOVE_NORMAL_PRIORITY_CLASS
+	if priority == 'NORMAL_PRIORITY_CLASS':
+		pri = psutil.NORMAL_PRIORITY_CLASS
+	if priority == 'BELOW_NORMAL_PRIORITY_CLASS':
+		pri = psutil.BELOW_NORMAL_PRIORITY_CLASS
+	if priority == 'IDLE_PRIORITY_CLASS':
+		pri = psutil.IDLE_PRIORITY_CLASS
+	
+	try:
+		proc.nice(pri)
+	except Exception as e:
+		return f"Error setting priority for PID {pid}: {e}"
+	return f"Set priority for PID {pid}"
+
 def doActionOnProcess(action:str, pid:int):
 	"""
 	Either pauses or resumes a given instance.
 
-	:param action: either 'pause' or 'resume'
+	:param action: either 'pause' or 'resume' or 'priority_XXXX'
 	:param pid: target chia_plot PID
 	"""
 
@@ -64,6 +87,8 @@ def doActionOnProcess(action:str, pid:int):
 		textBack = subprocess.check_output([pssuspendFilePathCmd, '/accepteula', '-r', str(int(pid))])
 	elif action == 'pause':
 		textBack = subprocess.check_output([pssuspendFilePathCmd, '/accepteula', str(int(pid))])
+	elif action.startswith('priority_'):
+		textBack = setPriority(pid, action.replace('priority_',''))
 	else:
 		print(f"Invalid action: '{action}'")
 		return
@@ -98,6 +123,17 @@ def initSysTray():
 		pystray.MenuItem(getStatusText, enabled=False, action=lambda: None),
 		pystray.MenuItem("Pause All Instances", lambda: doActionOnAllProcesses('pause')),
 		pystray.MenuItem("Resume All Instances", lambda: doActionOnAllProcesses('resume')),
+		pystray.MenuItem("Set Plotter CPU Priority",
+			pystray.Menu(
+				pystray.MenuItem("Select CPU Priority", enabled=False, action=lambda: None),
+				pystray.MenuItem("Max Priority (REALTIME)", lambda: doActionOnAllProcesses('priority_REALTIME_PRIORITY_CLASS')),
+				pystray.MenuItem("High Priority (HIGH)", lambda: doActionOnAllProcesses('priority_HIGH_PRIORITY_CLASS')),
+				pystray.MenuItem("Above Normal Priority (ABOVE_NORMAL)", lambda: doActionOnAllProcesses('priority_ABOVE_NORMAL_PRIORITY_CLASS')),
+				pystray.MenuItem("Normal Priority (NORMAL)", lambda: doActionOnAllProcesses('priority_NORMAL_PRIORITY_CLASS')),
+				pystray.MenuItem("Below Normal Priority (BELOW_NORMAL)", lambda: doActionOnAllProcesses('priority_BELOW_NORMAL_PRIORITY_CLASS')),
+				pystray.MenuItem("Idle Priority (IDLE)", lambda: doActionOnAllProcesses('priority_IDLE_PRIORITY_CLASS'))
+			)
+		),
 		pystray.MenuItem('Quit This Tool', lambda: store['tray_icon'].stop()),
 	)
 
